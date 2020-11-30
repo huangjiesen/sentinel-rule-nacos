@@ -15,9 +15,12 @@
  */
 package com.alibaba.csp.sentinel.dashboard.rule.nacos;
 
-import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
+import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.ApiDefinitionEntity;
+import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.GatewayFlowRuleEntity;
+import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.*;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigFactory;
 import com.alibaba.nacos.api.config.ConfigService;
@@ -35,14 +38,64 @@ import java.util.Properties;
 @Configuration
 public class NacosConfig {
 
-    @Bean
-    public Converter<List, String> ruleEntityEncoder() {
+    @Bean("authorityRuleEntityEncoder")
+    public Converter<List<AuthorityRuleEntity>, String> authorityRuleEntityEncoder() {
+        return JSON::toJSONString;
+    }
+    @Bean("degradeRuleEntityEncoder")
+    public Converter<List<DegradeRuleEntity>, String> degradeRuleEntityEncoder() {
+        return JSON::toJSONString;
+    }
+    @Bean("flowRuleEntityEncoder")
+    public Converter<List<FlowRuleEntity>, String> flowRuleEntityEncoder() {
+        return JSON::toJSONString;
+    }
+    @Bean("gatewayApiRuleEntityEncoder")
+    public Converter<List<ApiDefinitionEntity>, String> gatewayApiRuleEntityEncoder() {
+        return JSON::toJSONString;
+    }
+    @Bean("GatewayFlowRuleEntityEncoder")
+    public Converter<List<GatewayFlowRuleEntity>, String> GatewayFlowRuleEntityEncoder() {
         return JSON::toJSONString;
     }
 
-    @Bean("ruleEntityDecoder")
-    public Converter<String, List> ruleEntityDecoder() {
-        return JSON::parseArray;
+    @Bean("paramFlowRuleEntityEncoder")
+    public Converter<List<ParamFlowRuleEntity>, String> paramFlowRuleEntityEncoder() {
+        return JSON::toJSONString;
+    }
+    @Bean("systemRuleEntityEncoder")
+    public Converter<List<SystemRuleEntity>, String> systemRuleEntityEncoder() {
+        return JSON::toJSONString;
+    }
+
+
+    @Bean("authorityRuleEntityDecoder")
+    public Converter<String, List<AuthorityRuleEntity>> AuthorityRuleEntityRuleEntityDecoder() {
+        return s -> JSON.parseArray(s, AuthorityRuleEntity.class);
+    }
+    @Bean("degradeRuleEntityDecoder")
+    public Converter<String, List<DegradeRuleEntity>> DegradeRuleEntityDecoder() {
+        return s -> JSON.parseArray(s, DegradeRuleEntity.class);
+    }
+    @Bean("flowRuleEntityDecoder")
+    public Converter<String, List<FlowRuleEntity>> FlowRuleEntityDecoder() {
+        return s -> JSON.parseArray(s, FlowRuleEntity.class);
+    }
+    @Bean("apiDefinitionEntityDecoder")
+    public Converter<String, List<ApiDefinitionEntity>> ApiDefinitionEntityDecoder() {
+        return s -> JSON.parseArray(s, ApiDefinitionEntity.class);
+    }
+    @Bean("gatewayFlowRuleEntityDecoder")
+    public Converter<String, List<GatewayFlowRuleEntity>> GatewayFlowRuleEntityDecoder() {
+        return s -> JSON.parseArray(s, GatewayFlowRuleEntity.class);
+    }
+    @Bean("paramFlowRuleEntityDecoder")
+    public Converter<String, List<ParamFlowRuleEntity>> ParamFlowRuleEntityDecoder() {
+        return s -> JSON.parseArray(s, ParamFlowRuleEntity.class);
+    }
+    @Bean("systemRuleEntityDecoder")
+    public Converter<String, List<SystemRuleEntity>> SystemRuleEntityDecoder() {
+        return s -> JSON.parseArray(s, SystemRuleEntity.class);
     }
 
     @Bean
@@ -55,7 +108,7 @@ public class NacosConfig {
     public ConfigService nacosConfigService(NacosConfigProperties configProperties) throws Exception {
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.SERVER_ADDR, configProperties.getServerAddr());
-        properties.put(PropertyKeyConst.NAMESPACE, configProperties.getServerAddr());
+        properties.put(PropertyKeyConst.NAMESPACE, configProperties.getNamespace());
         return ConfigFactory.createConfigService(properties);
     }
 
