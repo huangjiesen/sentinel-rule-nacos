@@ -245,7 +245,7 @@ public class GatewayFlowRuleController {
         Date date = new Date();
         entity.setGmtCreate(date);
         entity.setGmtModified(date);
-
+        entity.setIntervalSec(GatewayFlowRuleEntity.calIntervalSec(entity.getInterval(),entity.getIntervalUnit()));
         try {
             entity = repository.save(entity);
             publishRules(entity.getApp());
@@ -392,7 +392,8 @@ public class GatewayFlowRuleController {
 
         Date date = new Date();
         entity.setGmtModified(date);
-
+        entity.setIntervalSec(GatewayFlowRuleEntity.calIntervalSec(entity.getInterval(),entity.getIntervalUnit()));
+        
         try {
             entity = repository.save(entity);
             publishRules(entity.getApp());
